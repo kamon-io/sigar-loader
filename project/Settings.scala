@@ -23,7 +23,7 @@ import scalariform.formatter.preferences._
 import net.virtualvoid.sbt.graph.Plugin.graphSettings
 
 object Settings {
-  
+
   Provided.hide
 
   val JavaVersion = "1.6"

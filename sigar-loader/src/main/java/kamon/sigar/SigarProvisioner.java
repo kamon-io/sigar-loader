@@ -26,10 +26,16 @@ import org.hyperic.sigar.SigarLoader;
 
 /**
  * Sigar native library extractor and loader.
+ * 
+ * To provision sigar native library at the given folder location:
+ * 
+ * <pre>
+ * SigarProvisioner.provision(new File(location));
+ * </pre>
  */
 public class SigarProvisioner {
 
-	/** The logger. */
+	/** Provisioner logger. */
 	private static final Logger logger = Logger
 			.getLogger(SigarProvisioner.class.getName());
 
@@ -43,93 +49,64 @@ public class SigarProvisioner {
 	 */
 	public static final String LIB_DIR = "native";
 
-	/** The Constant EOF. */
-	static final int EOF = -1;
-	
-	/** The Constant SIZE. */
-	static final int SIZE = 64 * 1024;
-
-	/**
-	 *  Perform stream copy.
-	 *
-	 * @param input The input stream.
-	 * @param output The output stream.
-	 * @throws Exception the exception
-	 */
-	public static void transfer(final InputStream input,
-			final OutputStream output) throws Exception {
-		final byte[] data = new byte[SIZE];
-		while (true) {
-			final int count = input.read(data, 0, SIZE);
-			if (count == EOF) {
-				break;
-			}
-			output.write(data, 0, count);
-		}
-	}
-
-	/** Environment property which provides sigar extract location. */
+	/** Environment variable which provides sigar extract location. */
 	public static final String ENVIRONMENT_VARIABLE = "KAMON_SIGAR_FOLDER";
 
 	/** System property which provides sigar extract location. */
 	public static final String SYSTEM_PROPERTY = "kamon.sigar.folder";
 
+	/** Hard coded value which provides sigar extract location. */
+	public static final String DEFAULT_LOCATION = System
+			.getProperty("user.dir") + File.separator + LIB_DIR;
+
 	/**
-	 * 
-	 * Configured sigar library extract location. <br>
-	 * Priority 1) is user provided comman line agent options. <br>
-	 * Priority 2) is user provided o/s environment variable. <br>
-	 * Priority 3) is user provided java system property. <br>
-	 * Priority 4) is hard coded location. <br>
+	 * Discover sigar library extract location. <br>
+	 * Priority 1) user provided command line agent options. <br>
+	 * Priority 2) user provided o/s environment variable. <br>
+	 * Priority 3) user provided java system property. <br>
+	 * Priority 4) hard coded location in ${user.dir}/native. <br>
 	 *
 	 * @param options
 	 *            Command line agent options.
-	 * @return Configured sigar library extract location.
+	 * @return Discovered sigar library extract location.
 	 */
-	public static String defaultLocation(final String options) {
+	public static String discoverLocation(final String options) {
 
-		/** Priority 1) is user provided agent options. */
+		/** Priority 1) user provided agent command line options. */
 		if (options != null) {
 			final String[] optionArray = options.split(",");
 			for (final String option : optionArray) {
-				if (option.startsWith(SYSTEM_PROPERTY)) {
-					return option.substring(1 + option.indexOf("="));
+				if (option.startsWith(SYSTEM_PROPERTY) && option.contains("=")) {
+					logger.info("Using location provided by options.");
+					return option.substring(option.indexOf("=") + 1);
 				}
 			}
-			throw new IllegalArgumentException(
-					"Missing extract location option: " + SYSTEM_PROPERTY);
 		}
 
-		/** Priority 2) is user provided o/s environment variable. */
+		/** Priority 2) user provided o/s environment variable. */
 		final String variable = System.getenv(ENVIRONMENT_VARIABLE);
 		if (variable != null) {
+			logger.info("Using location provided by environment variable.");
 			return variable;
 		}
 
-		/** Priority 3) is user provided java system property. */
+		/** Priority 3) user provided java system property. */
 		final String property = System.getProperty(SYSTEM_PROPERTY);
 		if (property != null) {
+			logger.info("Using location provided by system property.");
 			return property;
 		}
 
-		/** Priority 4) is hard coded location. */
-		return System.getProperty("user.dir") + File.separator + LIB_DIR;
+		/** Priority 4) hard coded location. */
+		logger.info("Using location provided by hard coded value.");
+		return DEFAULT_LOCATION;
 
 	}
 
 	/**
-	 *  Extract and load native sigar library in the default folder.
+	 * Verify if sigar native library is loaded and operational.
 	 *
-	 * @throws Exception the exception
-	 */
-	public static void provision() throws Exception {
-		provision(new File(defaultLocation(null)));
-	}
-
-	/**
-	 *  Verify if sigar native library is loaded and operational.
-	 *
-	 * @return true, if is native loaded
+	 * @return true, if is native library loaded.
 	 */
 	public static boolean isNativeLoaded() {
 		try {
@@ -143,10 +120,22 @@ public class SigarProvisioner {
 	}
 
 	/**
-	 *  Extract and load native sigar library in the provided folder.
+	 * Extract and load native sigar library in the default folder.
 	 *
-	 * @param folder the folder
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             The provisioning failure exception.
+	 */
+	public static void provision() throws Exception {
+		provision(new File(discoverLocation(null)));
+	}
+
+	/**
+	 * Extract and load native sigar library in the provided folder.
+	 *
+	 * @param folder
+	 *            Library extraction folder.
+	 * @throws Exception
+	 *             The provisioning failure exception.
 	 */
 	public static synchronized void provision(final File folder)
 			throws Exception {
@@ -189,6 +178,34 @@ public class SigarProvisioner {
 
 		logger.info("Sigar library provisioned: " + libraryPath);
 
+	}
+
+	/** The Constant EOF. */
+	static final int EOF = -1;
+
+	/** The Constant SIZE. */
+	static final int SIZE = 64 * 1024;
+
+	/**
+	 * Perform stream copy.
+	 *
+	 * @param input
+	 *            The input stream.
+	 * @param output
+	 *            The output stream.
+	 * @throws Exception
+	 *             The stream copy failure exception.
+	 */
+	public static void transfer(final InputStream input,
+			final OutputStream output) throws Exception {
+		final byte[] data = new byte[SIZE];
+		while (true) {
+			final int count = input.read(data, 0, SIZE);
+			if (count == EOF) {
+				break;
+			}
+			output.write(data, 0, count);
+		}
 	}
 
 }

@@ -39,7 +39,7 @@ object Publish {
       </license>
     </licenses>
     <scm>
-      <url>git://github.com/kamon-io/Kamon.git</url>
+      <url>https://github.com/kamon-io/sigar-loader</url>
       <connection>scm:git:git@github.com:kamon-io/sigar-loader.git</connection>
     </scm>
     <developers>

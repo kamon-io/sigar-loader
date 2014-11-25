@@ -42,12 +42,11 @@ object Release {
         refreshVersionWithSHA // FIX 2: update "version" by replacing the "-SNAPSHOT" with "-WHATEVER_COMMIT_SHA"
       )
     ) ++
-    sonatypeSettings ++
-    Seq(
-      // sbt-sonatype overrides publishTo. So we need to restore kamon repo declaration for snapshots
-      publishTo := { if (isSnapshot.value) Publish.kamonRepo else publishTo.value }
-    )
-
+      sonatypeSettings ++
+      Seq(
+        // sbt-sonatype overrides publishTo. So we need to restore kamon repo declaration for snapshots
+        publishTo := { if (isSnapshot.value) Publish.kamonRepo else publishTo.value }
+      )
 
   def kamonSonatypeCredentials =
     Credentials.toDirect(Credentials(Path.userHome / ".ivy2" / "kamon-credentials-sonatype.properties"))

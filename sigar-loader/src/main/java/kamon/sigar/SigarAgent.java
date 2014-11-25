@@ -20,17 +20,17 @@ import java.lang.instrument.Instrumentation;
 import java.util.logging.Logger;
 
 /**
- * Sigar agent, extractor, loader.
+ * Sigar library JVM provisioning agent.
  * 
- * To load as JVM agent:
+ * To load as JVM agent and provision sigar library at given a location:
  * 
  * <pre>
- * java -javaagent:/path/to/kamon-sigar-loader.jar=kamon.sigar.folder=/path/to/sigar/extract/folder ...
+ * java -javaagent:/path/to/sigar-loader.jar=kamon.sigar.folder=/path/to/sigar/extract/location ...
  * </pre>
  */
 public class SigarAgent {
 
-	/** The Constant logger. */
+	/** Agent logger. */
 	private static final Logger logger = Logger.getLogger(SigarAgent.class
 			.getName());
 
@@ -41,11 +41,14 @@ public class SigarAgent {
 	private static volatile Instrumentation instrumentation;
 
 	/**
-	 *  Contract: starting agents after JVM startup.
+	 * Contract: starting agents after JVM startup.
 	 *
-	 * @param options Agent command line options.
-	 * @param instrumentation Injected JVM instrumentation instance.
-	 * @throws Exception the exception
+	 * @param options
+	 *            Agent command line options.
+	 * @param instrumentation
+	 *            Injected JVM instrumentation instance.
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void agentmain(final String options,
 			final Instrumentation instrumentation) throws Exception {
@@ -54,11 +57,14 @@ public class SigarAgent {
 	}
 
 	/**
-	 *  Contract: starting agents via command-line interface.
+	 * Contract: starting agents via command-line interface.
 	 *
-	 * @param options Agent command line options.
-	 * @param instrumentation Injected JVM instrumentation instance.
-	 * @throws Exception the exception
+	 * @param options
+	 *            Agent command line options.
+	 * @param instrumentation
+	 *            Injected JVM instrumentation instance.
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static void premain(final String options,
 			final Instrumentation instrumentation) throws Exception {
@@ -67,11 +73,14 @@ public class SigarAgent {
 	}
 
 	/**
-	 *  Agent mode configuration.
+	 * Agent mode configuration.
 	 *
-	 * @param options Agent command line options.
-	 * @param instrumentation Injected JVM instrumentation instance.
-	 * @throws Exception the exception
+	 * @param options
+	 *            Agent command line options.
+	 * @param instrumentation
+	 *            Injected JVM instrumentation instance.
+	 * @throws Exception
+	 *             the exception
 	 */
 	public static synchronized void configure(final String options,
 			final Instrumentation instrumentation) throws Exception {
@@ -86,23 +95,23 @@ public class SigarAgent {
 
 		logger.info("Sigar loader options: " + options);
 
-		final File folder = new File(SigarProvisioner.defaultLocation(options));
+		final File folder = new File(SigarProvisioner.discoverLocation(options));
 
 		SigarProvisioner.provision(folder);
 
 	}
 
 	/**
-	 *  Agent command line options.
+	 * Agent command line options.
 	 *
-	 * @return Agent command line options. 
+	 * @return Agent command line options.
 	 */
 	public static String options() {
 		return options;
 	}
 
 	/**
-	 *  Injected JVM instrumentation instance.
+	 * Injected JVM instrumentation instance.
 	 *
 	 * @return Injected JVM instrumentation instance.
 	 */

@@ -46,34 +46,40 @@ public class SigarProvisionerTest {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Test
-	public void Default_Locaion_Via_Command_Options() {
+	public void Discover_Locaion_Via_Command_Options() {
 		final String folder = UUID.randomUUID().toString();
 		final String options = SigarProvisioner.SYSTEM_PROPERTY + "=" + folder;
-		assertEquals(SigarProvisioner.defaultLocation(options), folder);
+		assertEquals(SigarProvisioner.discoverLocation(options), folder);
 	}
 
 	@Test
-	public void Default_Locaion_Via_Environment_Variable() {
+	public void Discover_Locaion_Via_Default_Hardcoded_Value() {
+		assertEquals(SigarProvisioner.discoverLocation(null),
+				SigarProvisioner.DEFAULT_LOCATION);
+	}
+
+	@Test
+	public void Discover_Locaion_Via_Environment_Variable() {
 		assertNull(System.getenv(SigarProvisioner.ENVIRONMENT_VARIABLE));
 		final String variable = UUID.randomUUID().toString();
 		JDK.setEnv(SigarProvisioner.ENVIRONMENT_VARIABLE, variable);
-		assertEquals(SigarProvisioner.defaultLocation(null), variable);
+		assertEquals(SigarProvisioner.discoverLocation(null), variable);
 		JDK.setEnv(SigarProvisioner.ENVIRONMENT_VARIABLE, null);
 		assertNull(System.getenv(SigarProvisioner.ENVIRONMENT_VARIABLE));
 	}
 
 	@Test
-	public void Default_Locaion_Via_System_Property() {
+	public void Discover_Locaion_Via_System_Property() {
 		assertNull(System.getProperty(SigarProvisioner.SYSTEM_PROPERTY));
 		final String property = UUID.randomUUID().toString();
 		System.setProperty(SigarProvisioner.SYSTEM_PROPERTY, property);
-		assertEquals(SigarProvisioner.defaultLocation(null), property);
+		assertEquals(SigarProvisioner.discoverLocation(null), property);
 		System.clearProperty(SigarProvisioner.SYSTEM_PROPERTY);
 		assertNull(System.getProperty(SigarProvisioner.SYSTEM_PROPERTY));
 	}
 
 	@Test(expected = Throwable.class)
-	public void T1_Native_Is_Absent() throws Exception {
+	public void T1_Not_Yet_Provisioned() throws Exception {
 		final Sigar sigar = new Sigar();
 		assertTrue(sigar.getPid() > 0);
 		sigar.close();
@@ -101,7 +107,7 @@ public class SigarProvisionerTest {
 		final CpuPerc cpuPerc = sigar.getCpuPerc();
 		logger.info("CPU combined: {}", cpuPerc.getCombined());
 		logger.info("CPU stolen: {}", cpuPerc.getStolen());
-		
+
 		sigar.close();
 
 	}
@@ -114,6 +120,37 @@ public class SigarProvisionerTest {
 		SigarProvisioner.provision(new File("target/native1"));
 		SigarProvisioner.provision(new File("target/native2"));
 		SigarProvisioner.provision(new File("target/native3"));
+
+		assertTrue(SigarProvisioner.isNativeLoaded());
+
+	}
+
+	@Test
+	public void T4_Multiple_Sigar_Instances() throws Exception {
+
+		assertTrue(SigarProvisioner.isNativeLoaded());
+
+		final Sigar sigar1 = new Sigar();
+		final Sigar sigar2 = new Sigar();
+		final Sigar sigar3 = new Sigar();
+
+		final long pid1 = sigar1.getPid();
+		final long pid2 = sigar2.getPid();
+		final long pid3 = sigar3.getPid();
+
+		assertTrue(pid1 > 0);
+		assertTrue(pid2 > 0);
+		assertTrue(pid3 > 0);
+
+		assertEquals(pid1, pid2);
+		assertEquals(pid2, pid3);
+		assertEquals(pid3, pid1);
+
+		sigar1.close();
+		sigar2.close();
+		sigar3.close();
+
+		assertTrue(SigarProvisioner.isNativeLoaded());
 
 	}
 

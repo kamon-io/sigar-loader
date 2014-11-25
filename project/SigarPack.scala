@@ -60,11 +60,15 @@ object SigarPack {
     java.util.regex.Pattern.compile("""(.+\.dll)|(.+\.dylib)|(.+\.lib)|(.+\.sl)|(.+\.so)""")
   )
 
-  lazy val headers = Seq(
+  /** Required final jar manifest headers. */
+  lazy val manifestHeaders = Seq(
     ("Main-Class", mainClass),
     ("Agent-Class", agentClass),
     ("Premain-Class", agentClass),
-    ("Embedded-Sigar-Version", sigarVersion)
+    ("Embedded-Sigar-Origin", redhatRepo.root),
+    ("Embedded-Sigar-Licence", sigarLicence),
+    ("Embedded-Sigar-Version", sigarVersion),
+    ("Embedded-Sigar-BuildVersion", sigarBuildVersion)
   )
 
   /** Sigar build specific settings. */
@@ -99,7 +103,7 @@ object SigarPack {
       val jarArtifact = locateArtifact(report, sigarJar)
       val jarFileList = extractArtifact(jarArtifact, jarTarget, classFilter, false)
 
-      log.info(s"Unpack ZIP ${sigarZip}")
+      log.info(s"Unpack ZIP: ${sigarZip}")
       val zipTarget = jarTarget / nativeFolder
       val zipArtifact = locateArtifact(report, sigarZip)
       val zipFileList = extractArtifact(zipArtifact, zipTarget, nativeFilter, true)
@@ -122,7 +126,7 @@ object SigarPack {
     fork in Test := true,
 
     /** Ensure JVM agent packaging. */
-    packageOptions in (Compile, packageBin) += ManifestAttributes(headers: _*)
+    packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*)
 
   )
 

@@ -21,9 +21,10 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 /**
- * Sigar OSGI bundle activator.
+ * Sigar provisioning OSGI bundle activator.
  * 
- * Provision native sigar library in the persistent bundle storage location.
+ * Provision native sigar library in the persistent bundle storage location
+ * during bundle start.
  */
 public class SigarActivator implements BundleActivator {
 

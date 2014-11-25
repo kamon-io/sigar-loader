@@ -22,11 +22,23 @@ object Dependencies {
 
   val resolutionRepos = Seq(typesafeRepo, redhatRepo)
 
-  /** Scope for artifacts not present in Maven Central. */
-  val external = config("external").hide
-
+  /**
+   *  Version corresponding to source compatibility.
+   *  See: https://github.com/hyperic/sigar
+   */
   val sigarVersion = "1.6.5"
+  /**
+   *  Version corresponding to vendor binary releases.
+   *  See: http://repository.jboss.org/nexus/content/groups/public-jboss/org/hyperic/sigar/
+   */
   val sigarBuildVersion = sigarVersion + "." + "132"
+  /**
+   * Licence of Sigar java code and binary libraries.
+   * See: https://github.com/akka/akka/issues/16121
+   */
+  val sigarLicence = "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+  //
 
   val slf4Api = "org.slf4j" % "slf4j-api" % "1.7.7" // ApacheV2
   val slf4Jul = "org.slf4j" % "jul-to-slf4j" % "1.7.7" // ApacheV2
@@ -41,6 +53,11 @@ object Dependencies {
 
   val osgiCore = "org.osgi" % "org.osgi.core" % "4.3.1" // ApacheV2
   val osgiCompendium = "org.osgi" % "org.osgi.compendium" % "4.3.1" // ApacheV2
+
+  //
+
+  /** Scope for artifacts not present in Maven Central. */
+  val external = config("external").hide
 
   def external(deps: ModuleID*): Seq[ModuleID] = deps map (_ % external.name)
   def compile(deps: ModuleID*): Seq[ModuleID] = deps map (_ % "compile")

@@ -33,15 +33,17 @@ object Osgi {
     OsgiKeys.exportPackage := packages
   )
 
-  def sigarImport(packageName: String = s"org.hyperic.*;version=${sigarVersion}") = optionalResolution(packageName)
+  def sigarPackage = s"org.hyperic.*;version=${sigarVersion}"
+
+  def sigarImport = optionalResolution(sigarPackage)
 
   import SigarPack._
   val sigarLoader = settings ++ Seq(
-    OsgiKeys.additionalHeaders := headers.toMap,
+    OsgiKeys.additionalHeaders := manifestHeaders.toMap,
     OsgiKeys.privatePackage := Seq(nativeFolder),
     OsgiKeys.bundleActivator := Option(activatorClass),
     OsgiKeys.importPackage := Seq("org.osgi.*", "!*"),
-    OsgiKeys.exportPackage := Seq("kamon.sigar.*", s"org.hyperic.*;-split-package:=first;version=${sigarVersion}")
+    OsgiKeys.exportPackage := Seq("kamon.sigar.*", sigarPackage)
   )
 
 }
