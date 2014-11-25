@@ -3,7 +3,7 @@
 
 Provides convenient self-contained [Sigar](https://github.com/hyperic/sigar) 
 deployment and provisioning mechanism with JDK-only dependencies
-for common use cases:
+for the following common use cases:
 * Java Agent: automatic extract/load at JVM start time
 * Programmatically: embedded library extraction
 * Framework Contract: OSGI bundle activation
@@ -11,12 +11,14 @@ for common use cases:
 #### To load as JVM java agent:
 ```
 #
-# Extract to default location ${user.dir}/native
-java -javaagent:/path/to/sigar-loader.jar
+# Extract to default location: ${user.dir}/native
+java -javaagent:/path/to/sigar-loader.jar ...
 #
-# Extract to provided library extract location 
+# Extract to provided library extract location.
 java -javaagent:/path/to/sigar-loader.jar=kamon.sigar.folder=/path/to/library/extract/folder ...
 ```
+Sigar loader agent can also be provided via
+[JVM attach API](https://docs.oracle.com/javase/7/docs/jdk/api/attach/spec/com/sun/tools/attach/VirtualMachine.html)
 
 #### To load programmatically from your code:
 ```
@@ -25,11 +27,11 @@ java -javaagent:/path/to/sigar-loader.jar=kamon.sigar.folder=/path/to/library/ex
 		import org.hyperic.sigar.Sigar;
 		import kamon.sigar.SigarProvisioner;
 //
-// Extract to default location ${user.dir}/native 
+// Extract to default location: ${user.dir}/native 
 		SigarProvisioner.provision();
 		final Sigar sigar = new Sigar();
 //
-// Extract to user provided library extract location
+// Extract to user provided library extract location.
 		final File location = new File("target/native");
 		SigarProvisioner.provision(location);
 		final Sigar sigar = new Sigar();
@@ -52,8 +54,8 @@ will be selected by the following priority order:
 
 #### Extract location in OSGI
 
-Bundle activator will use framework persistent bundle storage location
+Bundle activator will use framework persistent bundle storage location.
 
 #### Repeated provision attempts
 
-Sigar loader ensures that native library is loaded exactly once
+Sigar loader ensures that native library is loaded exactly once.
