@@ -10,3 +10,30 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# ScalaIDE
+.scala_dependencies
+.idea
+.idea_modules
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.project
+.settings/
+.classpath
+.cache
+bin/
+
+# SBT
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Sigar extract location.
+native/

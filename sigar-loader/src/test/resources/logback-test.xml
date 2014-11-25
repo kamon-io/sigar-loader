@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="false" scan="false" scanPeriod="1 seconds">
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+
+	<property name="logging-folder" value="${user.dir}/target/log" />
+
+	<property name="logging-pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n" />
+
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${logging-pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="filing" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logging-folder}/app.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logging-folder}/app_%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${logging-pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<root level="debug">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="filing" />
+	</root>
+
+	<logger name="org.hyperic.sigar" level="debug" />
+
+</configuration>
