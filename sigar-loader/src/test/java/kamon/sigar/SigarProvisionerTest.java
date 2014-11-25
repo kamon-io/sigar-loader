@@ -46,20 +46,20 @@ public class SigarProvisionerTest {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Test
-	public void Discover_Locaion_Via_Command_Options() {
+	public void Discover_Location_Via_Command_Options() {
 		final String folder = UUID.randomUUID().toString();
 		final String options = SigarProvisioner.SYSTEM_PROPERTY + "=" + folder;
 		assertEquals(SigarProvisioner.discoverLocation(options), folder);
 	}
 
 	@Test
-	public void Discover_Locaion_Via_Default_Hardcoded_Value() {
+	public void Discover_Location_Via_Default_Hardcoded_Value() {
 		assertEquals(SigarProvisioner.discoverLocation(null),
 				SigarProvisioner.DEFAULT_LOCATION);
 	}
 
 	@Test
-	public void Discover_Locaion_Via_Environment_Variable() {
+	public void Discover_Location_Via_Environment_Variable() {
 		assertNull(System.getenv(SigarProvisioner.ENVIRONMENT_VARIABLE));
 		final String variable = UUID.randomUUID().toString();
 		JDK.setEnv(SigarProvisioner.ENVIRONMENT_VARIABLE, variable);
@@ -69,7 +69,7 @@ public class SigarProvisionerTest {
 	}
 
 	@Test
-	public void Discover_Locaion_Via_System_Property() {
+	public void Discover_Location_Via_System_Property() {
 		assertNull(System.getProperty(SigarProvisioner.SYSTEM_PROPERTY));
 		final String property = UUID.randomUUID().toString();
 		System.setProperty(SigarProvisioner.SYSTEM_PROPERTY, property);
