@@ -31,6 +31,7 @@ object Projects extends Build {
   lazy val sigarLoader = Project("sigar-loader", file("sigar-loader"))
     .settings(basicSettings: _*)
     .settings(formatSettings: _*)
+    .settings(Osgi.sigarLoader: _*)
     .settings(SigarRepack.settings: _*)
     .settings(
       libraryDependencies ++=

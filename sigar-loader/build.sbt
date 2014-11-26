@@ -1,2 +1,0 @@
-
-Osgi.sigarLoader

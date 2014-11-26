@@ -123,10 +123,10 @@ object SigarRepack {
     },
 
     /** Ensure JVM agent packaging with default manifest. */
-    // packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*),
+    packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*),
 
     /** Ensure JVM agent packaging with OSGI manifest. */
-    (Keys.test in Test) <<= (Keys.test in Test) dependsOn OsgiKeys.bundle,
+    //packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,
 
     /** Invoke verbose tesing in separate JVM. */
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-a"),
