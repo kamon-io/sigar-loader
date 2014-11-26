@@ -16,8 +16,8 @@
 import sbt._
 import Keys._
 
-/** Sigar distribution rep-packaging. */
-object SigarPack {
+/** Sigar distribution repackaging. */
+object SigarRepack {
   import UnzipTask._
   import sbt.Package._
   import Dependencies._
@@ -28,10 +28,10 @@ object SigarPack {
   /** Helper settings for extracted sigar javadoc. */
   lazy val sigarJavadoc = SettingKey[File]("sigar-javadoc", "Location of extracted sigar javadoc.")
 
-  /** Native o/s libraries folder inside kamon-sigar.jar. Hardcoded in [SigarLoader.java]. */
+  /** Native o/s libraries folder inside kamon-sigar.jar. Hardcoded in [kamon.sigar.SigarProvisioner.java]. */
   lazy val nativeFolder = "native"
 
-  /** Full class name of the sigar activator. Provides http://www.osgi.org/javadoc/r4v43/core/org/osgi/framework/BundleActivator.html. */
+  /** Full class name of the sigar activator. Provides http://wiki.osgi.org/wiki/Bundle-Activator. */
   lazy val activatorClass = "kamon.sigar.SigarActivator"
 
   /** Full class name of the sigar load time agent. Provides Agent-Class and Premain-Class contracts. */
@@ -60,7 +60,7 @@ object SigarPack {
     java.util.regex.Pattern.compile("""(.+\.dll)|(.+\.dylib)|(.+\.lib)|(.+\.sl)|(.+\.so)""")
   )
 
-  /** Required final jar manifest headers. */
+  /** Required final jar manifest headers. Present in both default and OSGI packaging. */
   lazy val manifestHeaders = Seq(
     ("Main-Class", mainClass),
     ("Agent-Class", agentClass),
@@ -71,7 +71,7 @@ object SigarPack {
     ("Embedded-Sigar-BuildVersion", sigarBuildVersion)
   )
 
-  /** Sigar build specific settings. */
+  /** Repackage origial Sigar classes, sources and native libraries. */
   lazy val settings = Seq(
 
     /** Hide external artifacts from pom.xml. */
@@ -124,8 +124,9 @@ object SigarPack {
     /** Invoke verbose tesing in separate JVM. */
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-a"),
     fork in Test := true,
+    exportJars := true,
 
-    /** Ensure JVM agent packaging. */
+    /** Ensure JVM agent packaging with default manifest. */
     packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*)
 
   )

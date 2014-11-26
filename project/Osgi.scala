@@ -37,7 +37,7 @@ object Osgi {
 
   def sigarImport = optionalResolution(sigarPackage)
 
-  import SigarPack._
+  import SigarRepack._
   val sigarLoader = settings ++ Seq(
     OsgiKeys.additionalHeaders := manifestHeaders.toMap,
     OsgiKeys.privatePackage := Seq(nativeFolder),

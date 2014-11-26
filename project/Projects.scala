@@ -20,16 +20,18 @@ object Projects extends Build {
   import Settings._
   import Dependencies._
 
+  /** Build aggregator. */
   lazy val root = Project("root", file("."))
     .settings(basicSettings: _*)
     .settings(formatSettings: _*)
     .settings(noPublishing: _*)
-    .aggregate(sigarLoader, sigarLoaderJavaIT, sigarLoaderOsgiIT)
+    .aggregate(sigarLoader, verifyAgent, verifyOsgi)
 
+  /** Primary Sigar artifact. */
   lazy val sigarLoader = Project("sigar-loader", file("sigar-loader"))
     .settings(basicSettings: _*)
     .settings(formatSettings: _*)
-    .settings(SigarPack.settings: _*)
+    .settings(SigarRepack.settings: _*)
     .settings(
       libraryDependencies ++=
         external(sigarJar, sigarZip) ++
@@ -37,14 +39,26 @@ object Projects extends Build {
         test(junit, junitInterface, slf4Api, slf4Jul, slf4Log4j, logback)
     )
 
-  lazy val sigarLoaderJavaIT = Project("sigar-loader-it-java", file("sigar-loader-it-java"))
+  /** Sigar java agent integration test. */
+  lazy val verifyAgent = Project("verify-agent", file("verify-agent"))
     .settings(basicSettings: _*)
     .settings(noPublishing: _*)
+    .settings(SigarAgent.settings: _*)
+    .settings(
+      libraryDependencies ++=
+        test(junit, junitInterface, slf4Api, slf4Jul, slf4Log4j, logback)
+    ).dependsOn(sigarLoader)
 
-  lazy val sigarLoaderOsgiIT = Project("sigar-loader-it-osgi", file("sigar-loader-it-osgi"))
+  /** Sigar OSGI bundle activator integration test. */
+  lazy val verifyOsgi = Project("verify-osgi", file("verify-osgi"))
     .settings(basicSettings: _*)
     .settings(noPublishing: _*)
+    .dependsOn(sigarLoader)
 
   val noPublishing = Seq(publish := (), publishLocal := (), publishArtifact := false)
+
+  override lazy val settings =
+    super.settings ++
+      Seq(shellPrompt := { s => Project.extract(s).currentProject.id + " > " })
 
 }

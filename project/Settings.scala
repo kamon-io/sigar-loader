@@ -35,6 +35,7 @@ object Settings {
     resolvers ++= Dependencies.resolutionRepos,
     fork in run := true,
     autoScalaLibrary := false,
+    parallelExecution in Test := false,
     javacOptions in compile := Seq(
       "-Xlint:-options",
       "-source", JavaVersion, "-target", JavaVersion

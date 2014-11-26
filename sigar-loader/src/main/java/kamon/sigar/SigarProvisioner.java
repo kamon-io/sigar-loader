@@ -108,7 +108,7 @@ public class SigarProvisioner {
 	 *
 	 * @return true, if is native library loaded.
 	 */
-	public static boolean isNativeLoaded() {
+	public static synchronized boolean isNativeLoaded() {
 		try {
 			final Sigar sigar = new Sigar();
 			sigar.getPid();
