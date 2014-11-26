@@ -47,7 +47,6 @@ object Projects extends Build {
     .settings(noPublishing: _*)
     .settings(SigarAgent.settings: _*)
     .settings(
-      generateSigarBundle,
       libraryDependencies ++=
         test(junit, junitInterface, slf4Api, slf4Jul, slf4Log4j, logback)
     ).dependsOn(sigarLoader)
@@ -58,7 +57,6 @@ object Projects extends Build {
     .settings(noPublishing: _*)
     .settings(SigarOsgi.settings: _*)
     .settings(
-      generateSigarBundle,
       libraryDependencies ++=
         test(junit, junitInterface, slf4Api, slf4Jul, slf4Log4j, logback)
     ).dependsOn(sigarLoader)
