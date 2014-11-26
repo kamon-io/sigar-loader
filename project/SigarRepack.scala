@@ -21,6 +21,7 @@ object SigarRepack {
   import UnzipTask._
   import sbt.Package._
   import Dependencies._
+  import com.typesafe.sbt.osgi.OsgiKeys
 
   /** Helper settings for extracted sigar sources. */
   lazy val sigarSources = SettingKey[File]("sigar-sources", "Location of extracted sigar sources.")
@@ -121,13 +122,16 @@ object SigarRepack {
       pairList
     },
 
+    /** Ensure JVM agent packaging with default manifest. */
+    // packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*),
+
+    /** Ensure JVM agent packaging with OSGI manifest. */
+    (Keys.test in Test) <<= (Keys.test in Test) dependsOn OsgiKeys.bundle,
+
     /** Invoke verbose tesing in separate JVM. */
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-a"),
     fork in Test := true,
-    exportJars := true,
-
-    /** Ensure JVM agent packaging with default manifest. */
-    packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*)
+    exportJars := true
 
   )
 
