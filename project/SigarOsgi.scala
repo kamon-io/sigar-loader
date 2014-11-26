@@ -17,8 +17,12 @@ import sbt._
 import sbt.Keys._
 
 /**
- *
+ * TODO
  */
 object SigarOsgi {
+
+  def settings = Seq(
+    fork in Test := true
+  )
 
 }

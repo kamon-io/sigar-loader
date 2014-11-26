@@ -123,7 +123,7 @@ object SigarRepack {
     },
 
     /** Ensure JVM agent packaging with default manifest. */
-    packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*),
+    //packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*),
 
     /** Ensure JVM agent packaging with OSGI manifest. */
     //packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,

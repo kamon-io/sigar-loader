@@ -14,11 +14,12 @@
  */
 
 import sbt._
-import Keys._
+import sbt.Keys._
 
 object Projects extends Build {
   import Settings._
   import Dependencies._
+  import com.typesafe.sbt.osgi.OsgiKeys
 
   /** Build aggregator. */
   lazy val root = Project("root", file("."))
@@ -46,6 +47,7 @@ object Projects extends Build {
     .settings(noPublishing: _*)
     .settings(SigarAgent.settings: _*)
     .settings(
+      generateSigarBundle,
       libraryDependencies ++=
         test(junit, junitInterface, slf4Api, slf4Jul, slf4Log4j, logback)
     ).dependsOn(sigarLoader)
@@ -54,9 +56,17 @@ object Projects extends Build {
   lazy val verifyOsgi = Project("verify-osgi", file("verify-osgi"))
     .settings(basicSettings: _*)
     .settings(noPublishing: _*)
-    .dependsOn(sigarLoader)
+    .settings(SigarOsgi.settings: _*)
+    .settings(
+      generateSigarBundle,
+      libraryDependencies ++=
+        test(junit, junitInterface, slf4Api, slf4Jul, slf4Log4j, logback)
+    ).dependsOn(sigarLoader)
 
-  val noPublishing = Seq(publish := (), publishLocal := (), publishArtifact := false)
+  lazy val noPublishing = Seq(publish := (), publishLocal := (), publishArtifact := false)
+
+  lazy val generateSigarBundle =
+    (Keys.compile in Compile) <<= (OsgiKeys.bundle in sigarLoader, Keys.compile in Compile) map ((_, c) => c)
 
   override lazy val settings =
     super.settings ++
