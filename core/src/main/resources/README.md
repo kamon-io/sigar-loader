@@ -47,10 +47,11 @@ karaf@root()> bundle:install mvn:io.kamon/sigar-loader/1.6.5-rev001
 Default library extract location used by
 * ```java -javaagent:/path/to/sigar-loader.jar``` and
 * ```SigarProvisioner.provision()```
+
 will be selected in the following priority order:
-  1. environment variable ```KAMON_SIGAR_FOLDER```
-  2. system property ```kamon.sigar.folder```
-  3. hard coded ```${user.dir}/native```
+ 1. environment variable ```KAMON_SIGAR_FOLDER```
+ 2. system property ```kamon.sigar.folder```
+ 3. hard coded ```${user.dir}/native```
 
 #### Extract location in OSGI
 
