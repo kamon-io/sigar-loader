@@ -26,11 +26,11 @@ Sigar loader agent can also be provided via
 		import java.io.File;
 		import org.hyperic.sigar.Sigar;
 		import kamon.sigar.SigarProvisioner;
-//
+
 // Extract to default location: ${user.dir}/native 
 		SigarProvisioner.provision();
 		final Sigar sigar = new Sigar();
-//
+
 // Extract to user provided library extract location.
 		final File location = new File("target/native");
 		SigarProvisioner.provision(location);
@@ -44,10 +44,10 @@ karaf@root()> bundle:install mvn:io.kamon/sigar-loader/1.6.5-rev001
 
 #### Default extract location
 
-Default library extract location used 
-by ```java -javaagent:/path/to/sigar-loader.jar``` 
-and ```SigarProvisioner.provision();```
-will be selected by the following priority order:
+Default library extract location used by
+* ```java -javaagent:/path/to/sigar-loader.jar``` and
+* ```SigarProvisioner.provision()```
+will be selected in the following priority order:
   1. environment variable ```KAMON_SIGAR_FOLDER```
   2. system property ```kamon.sigar.folder```
   3. hard coded ```${user.dir}/native```
