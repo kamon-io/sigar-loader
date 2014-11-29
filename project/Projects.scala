@@ -22,14 +22,14 @@ object Projects extends Build {
   import com.typesafe.sbt.osgi.OsgiKeys
 
   /** Build aggregator. */
-  lazy val root = Project("root", file("."))
+  lazy val root = Project("sigar-a", file("."))
     .settings(basicSettings: _*)
     .settings(formatSettings: _*)
     .settings(noPublishing: _*)
     .aggregate(sigarLoader, verifyAgent, verifyOsgi)
 
-  /** Primary Sigar artifact. */
-  lazy val sigarLoader = Project("sigar-loader", file("sigar-loader"))
+  /** Core Sigar artifact. */
+  lazy val sigarLoader = Project("sigar-loader", file("core"))
     .settings(basicSettings: _*)
     .settings(formatSettings: _*)
     .settings(Osgi.sigarLoader: _*)
@@ -42,7 +42,7 @@ object Projects extends Build {
     )
 
   /** Sigar java agent integration test. */
-  lazy val verifyAgent = Project("verify-agent", file("verify-agent"))
+  lazy val verifyAgent = Project("sigar-verify-agent", file("verify-agent"))
     .settings(basicSettings: _*)
     .settings(noPublishing: _*)
     .settings(SigarAgent.settings: _*)
@@ -52,7 +52,7 @@ object Projects extends Build {
     ).dependsOn(sigarLoader)
 
   /** Sigar OSGI bundle activator integration test. */
-  lazy val verifyOsgi = Project("verify-osgi", file("verify-osgi"))
+  lazy val verifyOsgi = Project("sigar-verify-osgi", file("verify-osgi"))
     .settings(basicSettings: _*)
     .settings(noPublishing: _*)
     .settings(SigarOsgi.settings: _*)
