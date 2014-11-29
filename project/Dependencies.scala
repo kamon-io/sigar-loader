@@ -40,9 +40,9 @@ object Dependencies {
 
   //
 
-  val slf4Api = "org.slf4j" % "slf4j-api" % "1.7.7" // ApacheV2
-  val slf4Jul = "org.slf4j" % "jul-to-slf4j" % "1.7.7" // ApacheV2
-  val slf4Log4j = "org.slf4j" % "log4j-over-slf4j" % "1.7.7" // ApacheV2
+  val slf4Api = "org.slf4j" % "slf4j-api" % "1.7.7" // MIT
+  val slf4Jul = "org.slf4j" % "jul-to-slf4j" % "1.7.7" // MIT
+  val slf4Log4j = "org.slf4j" % "log4j-over-slf4j" % "1.7.7" // MIT
   val logback = "ch.qos.logback" % "logback-classic" % "1.1.2" // EPL 1.0 / LGPL 2.1
 
   val sigarJar = "org.hyperic" % "sigar" % sigarBuildVersion withSources () withJavadoc () // ApacheV2
