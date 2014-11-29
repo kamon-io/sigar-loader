@@ -2,7 +2,7 @@
 ### Kamon Sigar Loader
 
 Provides convenient self-contained [Sigar](https://github.com/hyperic/sigar) 
-deployment and provisioning mechanism with JDK-only dependencies
+classes with native library deployment and provisioning mechanism with JDK-only dependencies
 for the following common use cases:
 * Java Agent: automatic extract/load at JVM start time
 * Programmatically: embedded library extraction
@@ -13,6 +13,7 @@ for the following common use cases:
 #
 # Extract to default location: ${user.dir}/native
 java -javaagent:/path/to/sigar-loader.jar ...
+
 #
 # Extract to provided library extract location.
 java -javaagent:/path/to/sigar-loader.jar=kamon.sigar.folder=/path/to/library/extract/folder ...
