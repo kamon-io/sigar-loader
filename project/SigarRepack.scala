@@ -66,7 +66,7 @@ object SigarRepack {
     ("Main-Class", mainClass),
     ("Agent-Class", agentClass),
     ("Premain-Class", agentClass),
-    ("Embedded-Sigar-Origin", redhatRepo.root),
+    ("Embedded-Sigar-Origin", hypericRepo.root),
     ("Embedded-Sigar-Licence", sigarLicence),
     ("Embedded-Sigar-Version", sigarVersion),
     ("Embedded-Sigar-BuildVersion", sigarBuildVersion)
@@ -77,6 +77,9 @@ object SigarRepack {
 
     /** Hide external artifacts from pom.xml. */
     ivyConfigurations += external,
+    
+    /** Resolve zip dependency extension. */
+    classpathTypes += "zip",
 
     /** Location of sigar source extraction. */
     sigarSources := target.value / "sigar-sources",
@@ -89,15 +92,17 @@ object SigarRepack {
       val log = streams.value.log
       val report = update.value
 
-      log.info(s"Unpack SRC: ${sigarJar}")
-      val srcTarget = sigarSources.value
-      val srcArtifact = locateArtifact(report, sigarJar, "sources")
-      val srcFileList = extractArtifact(srcArtifact, srcTarget, sourceFilter, false)
+// NOT PRESENT IN HYPERIC REPO      
+//      log.info(s"Unpack SRC: ${sigarJar}")
+//      val srcTarget = sigarSources.value
+//      val srcArtifact = locateArtifact(report, sigarJar, "sources")
+//      val srcFileList = extractArtifact(srcArtifact, srcTarget, sourceFilter, false)
 
-      log.info(s"Unpack DOC: ${sigarJar}")
-      val docTarget = sigarJavadoc.value
-      val docArtifact = locateArtifact(report, sigarJar, "javadoc")
-      val docFileList = extractArtifact(srcArtifact, srcTarget, javadocFilter, false)
+// NOT PRESENT IN HYPERIC REPO      
+//      log.info(s"Unpack DOC: ${sigarJar}")
+//      val docTarget = sigarJavadoc.value
+//      val docArtifact = locateArtifact(report, sigarJar, "javadoc")
+//      val docFileList = extractArtifact(srcArtifact, srcTarget, javadocFilter, false)
 
       log.info(s"Unpack JAR: ${sigarJar}")
       val jarTarget = (classDirectory in Compile).value
@@ -106,7 +111,7 @@ object SigarRepack {
 
       log.info(s"Unpack ZIP: ${sigarZip}")
       val zipTarget = jarTarget / nativeFolder
-      val zipArtifact = locateArtifact(report, sigarZip)
+      val zipArtifact = locateArtifact(report, sigarZip, "libs")
       val zipFileList = extractArtifact(zipArtifact, zipTarget, nativeFilter, true)
     },
 
@@ -114,13 +119,14 @@ object SigarRepack {
     (Keys.compile in Compile) <<= (Keys.compile in Compile) dependsOn unzipTask,
 
     /** Include original sigar sources as our own. */
-    (packageSrc in Compile) <<= (packageSrc in Compile) dependsOn unzipTask,
-    (mappings in (Compile, packageSrc)) ++= {
-      val base = sigarSources.value
-      val finder = base ** sourceFilter
-      val pairList = finder x relativeTo(base)
-      pairList
-    },
+// NOT PRESENT IN HYPERIC REPO      
+//    (packageSrc in Compile) <<= (packageSrc in Compile) dependsOn unzipTask,
+//    (mappings in (Compile, packageSrc)) ++= {
+//      val base = sigarSources.value
+//      val finder = base ** sourceFilter
+//      val pairList = finder x relativeTo(base)
+//      pairList
+//    },
 
     /** Ensure JVM agent packaging with default manifest. */
     packageOptions in (Compile, packageBin) += ManifestAttributes(manifestHeaders: _*),
