@@ -43,7 +43,7 @@ object Publish {
       <connection>scm:git:git@github.com:kamon-io/sigar-loader.git</connection>
     </scm>
     <developers>
-      <developer><id>andreipozolotin</id><name>Andrei Pozolotin</name><url>https://github.com/carrot-garden</url></developer>
+      <developer><id>andrei-pozolotin</id><name>Andrei Pozolotin</name><url>https://github.com/andrei-pozolotin</url></developer>
       <developer><id>dpsoft</id><name>Diego Parra</name><url>https://twitter.com/diegolparra</url></developer>
       <developer><id>ivantopo</id><name>Ivan Topolnjak</name><url>https://twitter.com/ivantopo</url></developer>
     </developers>

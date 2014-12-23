@@ -17,21 +17,21 @@ import sbt._
 
 object Dependencies {
 
-  val redhatRepo = "RedHat Repository" at "http://repository.jboss.org/nexus/content/groups/public-jboss"
+  val hypericRepo = "Hyperic Repository" at "http://maven.hyperic.org/external/"
   val typesafeRepo = "TypeSafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 
-  val resolutionRepos = Seq(typesafeRepo, redhatRepo)
+  val resolutionRepos = Seq(typesafeRepo, hypericRepo)
 
   /**
    *  Version corresponding to source compatibility.
    *  See: https://github.com/hyperic/sigar
    */
-  val sigarVersion = "1.6.5"
+  val sigarVersion = "1.6.6"
   /**
    *  Version corresponding to vendor binary releases.
-   *  See: http://repository.jboss.org/nexus/content/groups/public-jboss/org/hyperic/sigar/
+   *  See: http://maven.hyperic.org/
    */
-  val sigarBuildVersion = sigarVersion + "." + "132"
+  val sigarBuildVersion = sigarVersion + "." + "12"
   /**
    * Licence of Sigar java code and binary libraries.
    * See: https://github.com/akka/akka/issues/16121
@@ -45,8 +45,8 @@ object Dependencies {
   val slf4Log4j = "org.slf4j" % "log4j-over-slf4j" % "1.7.7" // MIT
   val logback = "ch.qos.logback" % "logback-classic" % "1.1.2" // EPL 1.0 / LGPL 2.1
 
-  val sigarJar = "org.hyperic" % "sigar" % sigarBuildVersion withSources () withJavadoc () // ApacheV2
-  val sigarZip = "org.hyperic" % "sigar-dist" % sigarBuildVersion // ApacheV2
+  val sigarJar = "org.hyperic" % "sigar" % sigarBuildVersion // ApacheV2
+  val sigarZip = "org.hyperic" % "sigar" % sigarBuildVersion artifacts(Artifact("sigar", "zip", "zip", "libs")) // ApacheV2
 
   val junit = "junit" % "junit" % "4.11" // Common Public License 1.0
   val junitInterface = "com.novocode" % "junit-interface" % "0.11" // MIT
