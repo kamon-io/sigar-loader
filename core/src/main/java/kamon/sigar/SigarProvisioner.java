@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.hyperic.sigar.Sigar;
@@ -26,9 +28,9 @@ import org.hyperic.sigar.SigarLoader;
 
 /**
  * Sigar native library extractor and loader.
- * 
+ *
  * To provision sigar native library at the given folder location:
- * 
+ *
  * <pre>
  * SigarProvisioner.provision(new File(location));
  * </pre>
@@ -41,7 +43,7 @@ public class SigarProvisioner {
 
 	/**
 	 * Location of native libraries.
-	 * 
+	 *
 	 * <pre>
 	 * when stored in loader.jar:     /${LIB_DIR}/libsigar-xxx.so
 	 * after default load/extract:    ${user.dir}/${LIB_DIR}/libsigar-xxx.so
@@ -108,16 +110,20 @@ public class SigarProvisioner {
 	 *
 	 * @return true, if is native library loaded.
 	 */
-	public static synchronized boolean isNativeLoaded() {
-		try {
-			final Sigar sigar = new Sigar();
-			sigar.getPid();
-			sigar.close();
-			return true;
-		} catch (final Throwable e) {
-			return false;
-		}
-	}
+    public static synchronized boolean isNativeLoaded() {
+        try {
+            return isSigarAlreadyLoaded();
+        } catch (final Throwable e) {
+            try {
+                final Sigar sigar = new Sigar();
+                sigar.getPid();
+                sigar.close();
+                return true;
+            } catch (final Throwable ex) {
+                return false;
+            }
+        }
+    }
 
 	/**
 	 * Extract and load native sigar library in the default folder.
@@ -207,5 +213,24 @@ public class SigarProvisioner {
 			output.write(data, 0, count);
 		}
 	}
+
+    /**
+     * Check silently if sigar was loaded in order to avoid the SigarException: no libsigar-*.
+     *
+     * @return true, if Sigar native library is present in the ClassLoader otherwise false.
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
+	private static boolean isSigarAlreadyLoaded() throws Exception {
+        final String libraryName = new SigarLoader(Sigar.class).getLibraryName();
+        final Field loadedLibraryNames = ClassLoader.class.getDeclaredField("loadedLibraryNames");
+		loadedLibraryNames.setAccessible(true);
+        final Vector<String> libraries = (Vector<String>) loadedLibraryNames.get(SigarProvisioner.class.getClassLoader());
+
+        for (String library: libraries) {
+            if(library.contains(libraryName)) return true;
+        }
+        return false;
+    }
 
 }
