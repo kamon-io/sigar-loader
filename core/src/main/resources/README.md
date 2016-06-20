@@ -61,3 +61,10 @@ Bundle activator will use framework persistent bundle storage location.
 #### Repeated provision attempts
 
 Sigar loader ensures that native library is loaded exactly once.
+
+#### Provision from several JVM
+
+Using sigar loader to provision native sigar library at the same path location from different JVM instances running on the same host can lead to crash of first running JVM when sigar native library is overwritten by the second running JVM during the library extraction. 
+
+This is expected behaviour and the work around is to use extraction paths which are unique to each JVM.
+See https://github.com/akka/akka/issues/20804
