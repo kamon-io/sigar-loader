@@ -20,7 +20,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.Vector;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.hyperic.sigar.Sigar;
@@ -225,7 +225,7 @@ public class SigarProvisioner {
         final String libraryName = new SigarLoader(Sigar.class).getLibraryName();
         final Field loadedLibraryNames = ClassLoader.class.getDeclaredField("loadedLibraryNames");
 		loadedLibraryNames.setAccessible(true);
-        final Vector<String> libraries = (Vector<String>) loadedLibraryNames.get(SigarProvisioner.class.getClassLoader());
+        final Collection<String> libraries = (Collection<String>) loadedLibraryNames.get(SigarProvisioner.class.getClassLoader());
 
         for (String library: libraries) {
             if(library.contains(libraryName)) return true;
