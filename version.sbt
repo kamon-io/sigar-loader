@@ -1,6 +1,6 @@
 
 // Use padding.
-val kamonRelease = "rev002"
+val kamonRelease = "rev003"
 
 // Compatible with:
 // http://www.osgi.org/javadoc/r4v43/core/org/osgi/framework/Version.html
